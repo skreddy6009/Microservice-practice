@@ -8,6 +8,7 @@ pipeline {
         DOCKER_CREDS_ID = "docker-creds"
         SONAR_PROJECT_KEY = "cartservice"
         TRIVY_REPORTS = "cartservice"
+        DOCKER_FILE_PATH = 'src'
     }
     stages {
        /* stage ('sonar analysis') {
@@ -31,6 +32,7 @@ pipeline {
         stage ('Docker Build') {
             steps {
                 script {
+                dir("${DOCKER_FILE_PATH}") {
                  def time_stamp = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
                   env.TIME_STAMP = time_stamp
                   sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP} ."
