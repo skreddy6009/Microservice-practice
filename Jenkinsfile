@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'EKS-1', contextName: '', credentialsId: 'k8s-creds', namespace: 'webapps', serverUrl: 'https://4A8CB4ED6E0779D33EDCB150EF63DF27.gr7.ap-south-1.eks.amazonaws.com']]) {
-                      sh "kubectl get nodes"
+                      sh "kubectl get pods"
                     }
                 }
             }
