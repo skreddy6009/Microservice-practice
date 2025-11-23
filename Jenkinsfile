@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
         withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'C', passwordVariable: 'PASSWORD')]){
-          echo '{$PASSWORD} | docker login -u {PASSWORD} --pasword-stdin'
+          echo '${PASSWORD} | docker login -u {PASSWORD} --pasword-stdin'
           sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
         }
     }
