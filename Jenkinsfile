@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "arjundocker92/microservice"
-        DOCKER_TAG   = "recommentationservice"
+        DOCKER_TAG   = "recommendationservice"
         DOCKER_CREDS_ID = "docker-creds"
-        SONAR_PROJECT_KEY = "recommentationservice"
-        TRIVY_REPORTS = "recommentationservice"
+        SONAR_PROJECT_KEY = "recommendationservice"
+        TRIVY_REPORTS = "recommendationservice"
     }
     stages {
         stage ('Trivy FS Scan') {
