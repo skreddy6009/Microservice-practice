@@ -3,55 +3,31 @@ pipeline {
 
     environment {
         SONAR_SERVER = 'sonar-server'
-        DOCKER_IMAGE = "yourdockerhub/adservice"
-        DOCKER_TAG   = "v1"
-         GRADLE_OPTS = ""
+        DOCKER_IMAGE = "arjundocker92/microservice"
+        DOCKER_TAG   = "adservice"
     }
 
     stages {
-        stage('Clean Gradle Cache') {
-         steps {
-        sh 'rm -rf ~/.gradle/caches ~/.gradle/wrapper'
-         }
-       }
-        stage('Prepare Gradle Wrapper') {
+        stage {
             steps {
-                sh '''
-                    java -version
-                    chmod +x gradlew
-                '''
+                script {
+                 def time_stamp = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
+                  env.TIME_STAMP = time_stamp
+                  sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP} .
+                }
             }
         }
-
-        stage('Download Dependencies (downloadRepos)') {
+        stage ('docker image pushing') {
             steps {
-                sh '''
-                    ./gradlew downloadRepos
-                '''
-            }
+                script {
+        withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'C', passwordVariable: 'PASSWORD')]
+    }){
+    echo '{$PASSWORD} | docker login -u {PASSWORD} --pasword-stdin'
+    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
         }
-        stage('Run Unit Tests') {
-            steps {
-                sh '''
-                    ./gradlew test
-                '''
-            }
-        }
-        stage('Build') {
-            steps {
-                sh '''
-                    ./gradlew googleJavaFormat
-                    ./gradlew build
-                '''
-            }
-        }
-        stage('Build Distribution (installDist)') {
-            steps {
-                sh '''
-                    ./gradlew installDist
-                '''
-            }
-        }
-
     }
+   }
+ }
+            
+ }         
 }
