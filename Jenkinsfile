@@ -11,6 +11,7 @@ pipeline {
         stage('Prepare Gradle Wrapper') {
             steps {
                 sh '''
+                    java -version
                     chmod +x gradlew
                 '''
             }
