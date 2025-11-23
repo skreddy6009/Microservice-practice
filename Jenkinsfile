@@ -9,6 +9,11 @@ pipeline {
     }
 
     stages {
+        stage('Clean Gradle Cache') {
+         steps {
+        sh 'rm -rf ~/.gradle/caches ~/.gradle/wrapper'
+         }
+       }
         stage('Prepare Gradle Wrapper') {
             steps {
                 sh '''
