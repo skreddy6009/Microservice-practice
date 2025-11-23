@@ -23,7 +23,7 @@ pipeline {
         stage ('Trivy FS Scan') {
             steps {
                 script {
-                    sh "trivy fs --format json ${TRIVY_REPORTS}_reports.json ."
+                    sh "trivy fs --format json --output ${TRIVY_REPORTS}_reports.json ."
                     archiveArtifacts artifacts: '${TRIVY_REPORTS}_reports.json', fingerprint: true
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
         stage ('Trivy Image Scan') {
           steps {
                 script {
-                    sh "trivy image --format json ${TRIVY_REPORTS}_image_reports.json ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
+                    sh "trivy image --format json  --output ${TRIVY_REPORTS}_image_reports.json ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
                     archiveArtifacts artifacts: '${TRIVY_REPORTS}_image_reports.json', fingerprint: true
                 }
           }
