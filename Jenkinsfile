@@ -5,6 +5,7 @@ pipeline {
         SONAR_SERVER = 'sonar-server'
         DOCKER_IMAGE = "yourdockerhub/adservice"
         DOCKER_TAG   = "v1"
+         GRADLE_OPTS = ""
     }
 
     stages {
