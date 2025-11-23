@@ -6,8 +6,28 @@ pipeline {
         DOCKER_TAG   = "adservice"
         LANGUAGE = "java"
         DOCKER_CREDS_ID = "docker-creds"
+        SONAR_PROJECT_KEY = "adservice"
+        TRIVY_REPORTS = "adservice
     }
     stages {
+        stage ('sonar analysis') {
+          steps {
+              script {
+                  def SONAR_SCANNER_HOME = tool name: 'sonar-scanner'
+                  withSonarQubeEnv('sonar') {
+                      sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.languae=${LANGUAGE}"
+                  }
+              }
+          }
+        }
+        stage ('Trivy FS Scan') {
+            steps {
+                script {
+                    sh "trivy fs --format json ${TRIVY_REPORTS}_reports.json ."
+                    archiveArtifacts artifacts: '${TRIVY_REPORTS}_reports.json', fingerprint: true
+                }
+            }
+        }
         stage ('Docker Build') {
             steps {
                 script {
@@ -17,10 +37,18 @@ pipeline {
                 }
             }
         }
+        stage ('Trivy Image Scan') {
+          steps {
+                script {
+                    sh "trivy image --format json ${TRIVY_REPORTS}_image_reports.json ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
+                    archiveArtifacts artifacts: '${TRIVY_REPORTS}_image_reports.json', fingerprint: true
+                }
+          }
+        }          
         stage ('Docker Image Pushing') {
             steps {
                 script {
-       withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDS_ID}", usernameVariable: 'USER_NAME', passwordVariable: 'PASSWORD')]) {
+           withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDS_ID}", usernameVariable: 'USER_NAME', passwordVariable: 'PASSWORD')]) {
             sh """
                 echo "$PASSWORD" | docker login -u "$USER_NAME" --password-stdin
             """
