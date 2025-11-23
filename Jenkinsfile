@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     sh "trivy fs --format json --output ${TRIVY_REPORTS}_reports.json ."
-                    archiveArtifacts artifacts: '${TRIVY_REPORTS}_reports.json', fingerprint: true
+                    archiveArtifacts artifacts: "${TRIVY_REPORTS}_reports.json", fingerprint: true
                 }
             }
         }
