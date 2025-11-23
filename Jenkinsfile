@@ -13,7 +13,7 @@ pipeline {
                 script {
                  def time_stamp = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
                   env.TIME_STAMP = time_stamp
-                  sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP} .
+                  sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP} ."
                 }
             }
         }
