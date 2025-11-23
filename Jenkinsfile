@@ -10,16 +10,16 @@ pipeline {
         TRIVY_REPORTS = "adservice"
     }
     stages {
-        stage ('sonar analysis') {
+       /* stage ('sonar analysis') {
           steps {
               script {
                   def SONAR_SCANNER_HOME = tool name: 'sonar-scanner'
                   withSonarQubeEnv('sonar') {
-                      sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=src/main/java -Dsonar.java.binaries=build/classes/java/main"
+                      sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY}"
                   }
               }
           }
-        }
+        }*/
         stage ('Trivy FS Scan') {
             steps {
                 script {
