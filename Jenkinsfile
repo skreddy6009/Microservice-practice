@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        SONAR_SERVER = 'sonar-server'
         DOCKER_IMAGE = "arjundocker92/microservice"
         DOCKER_TAG   = "adservice"
+        LANGUAGE = "java"
+        DOCKER_CREDS_ID = "docker-creds"
     }
-
     stages {
-        stage ('docker build') {
+        stage ('Docker Build') {
             steps {
                 script {
                  def time_stamp = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
@@ -17,19 +17,30 @@ pipeline {
                 }
             }
         }
-        stage ('docker image pushing') {
+        stage ('Docker Image Pushing') {
             steps {
                 script {
-       withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'USER_NAME', passwordVariable: 'PASSWORD')]) {
+       withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDS_ID}", usernameVariable: 'USER_NAME', passwordVariable: 'PASSWORD')]) {
             sh """
                 echo "$PASSWORD" | docker login -u "$USER_NAME" --password-stdin
             """
             
           sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
         }
+      }
+     }
     }
+   stage ('Clean up') {
+    steps {
+        script {
+            sh """
+               docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP} || true
+              docker image prune -f || true
+           """
+            cleanWs()
+          }
+       }
    }
- }
-            
+       
  }         
 }
