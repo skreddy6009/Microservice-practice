@@ -7,7 +7,7 @@ pipeline {
         LANGUAGE = "java"
         DOCKER_CREDS_ID = "docker-creds"
         SONAR_PROJECT_KEY = "adservice"
-        TRIVY_REPORTS = "adservice
+        TRIVY_REPORTS = "adservice"
     }
     stages {
         stage ('sonar analysis') {
