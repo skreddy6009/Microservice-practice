@@ -15,7 +15,7 @@ pipeline {
               script {
                   def SONAR_SCANNER_HOME = tool name: 'sonar-scanner'
                   withSonarQubeEnv('sonar') {
-                      sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.languae=${LANGUAGE}"
+                      sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${SONAR_PROJECT_KEY}"
                   }
               }
           }
