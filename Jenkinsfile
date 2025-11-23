@@ -41,7 +41,7 @@ pipeline {
           steps {
                 script {
                     sh "trivy image --format json  --output ${TRIVY_REPORTS}_image_reports.json ${DOCKER_IMAGE}:${DOCKER_TAG}-${env.TIME_STAMP}"
-                    archiveArtifacts artifacts: '${TRIVY_REPORTS}_image_reports.json', fingerprint: true
+                    archiveArtifacts artifacts: "${TRIVY_REPORTS}_image_reports.json", fingerprint: true
                 }
           }
         }          
