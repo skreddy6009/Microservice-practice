@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage {
+        stage ('docker build') {
             steps {
                 script {
                  def time_stamp = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
